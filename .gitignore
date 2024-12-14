@@ -1,0 +1,6 @@
+__pycache__/
+google-cloud-sdk/
+*.pyc
+.devcontainer/
+google-cloud-cli-linux-x86_64.tar.gz
+.venv/
