@@ -45,6 +45,11 @@ Deploy the application to Cloud Run:
 ./google-cloud-sdk/bin/gcloud run deploy --source .
 ```
 
+## Test deployment
+```bash
+curl -X POST https://codespaces-flask-916007394186.asia-south1.run.app/ask -H "Content-Type: application/json" -d '{"question":"What are the rights I have as a citizen of India?"}'
+```
+
 ## Additional Resources
 
 - Flask App on Google Cloud Run: [Quickstart Guide](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service)
