@@ -75,34 +75,3 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 8080))
     )
 
-"""
-
-flask app hot demo
-https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service
-
-gcloud cli install
-https://cloud.google.com/sdk/docs/install
-
-1.run local app
-  python main.py
-
-2.auth gcloud
-  gcloud auth application-default login
-
-3.give permission to service account
-
-./google-cloud-sdk/bin/gcloud projects add-iam-policy-binding law-ai-437009 \
-    --member=serviceAccount:916007394186-compute@developer.gserviceaccount.com \
-    --role=roles/cloudbuild.builds.builder
-
-4.test api
-curl -X POST http://localhost:8080/ask   -H "Content-Type: application/json"   -d '{"question":"What are the rights I have as a citizen of India?"}'
-
-5.deploy to cloud run
-./google-cloud-sdk/bin/gcloud run deploy --source .
-
-
-
-
-
-"""
