@@ -1,37 +1,37 @@
 from flask import Flask, jsonify, request
 import vertexai
-from vertexai.preview.generative_models import GenerativeModel, SafetySetting, Tool
+from vertexai.preview.generative_models import GenerativeModel, SafetySetting, Part, Tool
 from vertexai.preview.generative_models import grounding
 import os
+import json
 
 app = Flask(__name__)
 
-textsi_1 = """You are LexMachina 🤖⚖ an Indian law legal AI Assistant..."""  # Your original system prompt
+law_assistant_instruction = """You are LexMachina 🤖⚖ an Indian law legal AI Assistant..."""  # Your original system prompt
 
+# Update generation config to enforce JSON
 generation_config = {
     "max_output_tokens": 8192,
     "temperature": 1,
-    "top_p": 0.95,
+    "top_p": 0.95,  
 }
 
 safety_settings = [
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
-    SafetySetting(
-        category=SafetySetting.HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold=SafetySetting.HarmBlockThreshold.OFF
-    ),
+    SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="BLOCK_ONLY_HIGH"),
+    SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_ONLY_HIGH"),
+    SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="BLOCK_ONLY_HIGH"),
+    SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="BLOCK_ONLY_HIGH"),
 ]
+
+def clean_response(response):
+    try:
+        # Convert protobuf to dict and extract text
+        response_text = response.candidates[0].content.parts[0].text
+        
+        return response_text
+        
+    except Exception as e:
+        return {"answer": str(response), "error": str(e)}
 
 @app.route("/")
 def health_check():
@@ -56,17 +56,24 @@ def ask_legal_question():
         model = GenerativeModel(
             "gemini-1.5-flash-002",
             tools=tools,
-            system_instruction=[textsi_1]
-        )
-        chat = model.start_chat()
-        response = chat.send_message(
-            [question],
+            system_instruction=[law_assistant_instruction],
             generation_config=generation_config,
             safety_settings=safety_settings
         )
-        return jsonify({"response": str(response)})
+        chat = model.start_chat()
+        response = chat.send_message([question])
+        cleaned_text = clean_response(response)
+        
+        return jsonify({
+            "status": "success",
+            "response": cleaned_text
+        })
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "status": "error", 
+            "error": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(
