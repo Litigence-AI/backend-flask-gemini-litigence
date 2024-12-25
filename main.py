@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS  # Add this import
+
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, SafetySetting, Part, Tool
 from vertexai.preview.generative_models import grounding
@@ -6,6 +8,20 @@ import os
 import json
 
 app = Flask(__name__)
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "allow_headers": ["Content-Type"],
+        "methods": ["GET", "POST", "OPTIONS"]
+    }
+})
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 law_assistant_instruction = """You are LexMachina 🤖⚖ an Indian law legal AI Assistant..."""  # Your original system prompt
 
