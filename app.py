@@ -6,6 +6,11 @@ from vertexai.preview.generative_models import GenerativeModel, SafetySetting, P
 from vertexai.preview.generative_models import grounding
 import os
 import json
+from dotenv import load_dotenv
+
+load_dotenv()  # Load variables from .env
+PROJECT_ID = os.getenv("PROJECT_ID", "law-ai-437009")
+LOCATION = os.getenv("LOCATION", "asia-south1")
 
 app = Flask(__name__)
 CORS(app, resources={
@@ -63,7 +68,7 @@ def ask_legal_question():
         return jsonify({"error": "Question is required"}), 400
 
     try:
-        vertexai.init(project="law-ai-437009", location="asia-south1")
+        vertexai.init(project=PROJECT_ID, location=LOCATION)
         tools = [
             Tool.from_google_search_retrieval(
                 google_search_retrieval=grounding.GoogleSearchRetrieval()
@@ -93,8 +98,8 @@ def ask_legal_question():
 
 if __name__ == "__main__":
     app.run(
-        debug=True, 
-        host="0.0.0.0", 
-        port=int(os.environ.get("PORT", 8080))
+        debug=(os.getenv("FLASK_ENV", "development") != "production"),
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", 8080))
     )
 
