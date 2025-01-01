@@ -9,8 +9,8 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()  # Load variables from .env
-PROJECT_ID = os.getenv("PROJECT_ID", "law-ai-437009")
-LOCATION = os.getenv("LOCATION", "asia-south1")
+PROJECT_ID = os.getenv("PROJECT_ID")
+LOCATION = os.getenv("LOCATION")
 
 app = Flask(__name__)
 CORS(app, resources={
@@ -20,6 +20,14 @@ CORS(app, resources={
         "methods": ["GET", "POST", "OPTIONS"]
     }
 })
+
+@app.before_request
+def check_env_variables():
+    if not PROJECT_ID or not LOCATION:
+        return jsonify({
+            "status": "error",
+            "error": "Missing PROJECT_ID or LOCATION environment variable."
+        }), 500
 
 @app.after_request
 def after_request(response):
