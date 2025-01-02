@@ -12,6 +12,10 @@ load_dotenv()  # Load variables from .env
 PROJECT_ID = os.getenv("PROJECT_ID")
 LOCATION = os.getenv("LOCATION")
 
+# Debugging statements to verify environment variables
+print(f"PROJECT_ID: {PROJECT_ID}")
+print(f"LOCATION: {LOCATION}")
+
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
@@ -108,6 +112,6 @@ if __name__ == "__main__":
     app.run(
         debug=(os.getenv("FLASK_ENV", "development") != "production"),
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 8080))
+        port=8080
     )
 
