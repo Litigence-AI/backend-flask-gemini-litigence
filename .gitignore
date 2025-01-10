@@ -3,3 +3,4 @@ google-cloud-sdk/
 *.pyc
 google-cloud-cli-linux-x86_64.tar.gz
 .venv/
+.env
