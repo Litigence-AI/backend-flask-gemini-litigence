@@ -14,4 +14,3 @@ grpc-google-iam-v1==0.13.1
 grpcio==1.68.1
 grpcio-status==1.68.1
 flask-cors
-python-dotenv

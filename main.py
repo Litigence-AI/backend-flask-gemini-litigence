@@ -6,9 +6,7 @@ from vertexai.preview.generative_models import GenerativeModel, SafetySetting, P
 from vertexai.preview.generative_models import grounding
 import os
 import json
-from dotenv import load_dotenv
 
-load_dotenv()  # Load variables from .env
 PROJECT_ID = os.environ.get("PROJECT_ID")
 LOCATION = os.environ.get("LOCATION")
 
