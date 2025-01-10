@@ -9,8 +9,8 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()  # Load variables from .env
-PROJECT_ID = os.getenv("PROJECT_ID")
-LOCATION = os.getenv("LOCATION")
+PROJECT_ID = os.environ.get("PROJECT_ID")
+LOCATION = os.environ.get("LOCATION")
 
 # Debugging statements to verify environment variables
 print(f"PROJECT_ID: {PROJECT_ID}")
@@ -110,7 +110,7 @@ def ask_legal_question():
 
 if __name__ == "__main__":
     app.run(
-        debug=(os.getenv("FLASK_ENV", "development") != "production"),
+        debug=(os.environ.get("FLASK_ENV", "development") != "production"),
         host="0.0.0.0",
         port=8080
     )
