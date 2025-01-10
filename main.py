@@ -7,12 +7,12 @@ from vertexai.preview.generative_models import grounding
 import os
 import json
 
-PROJECT_ID = os.environ.get("PROJECT_ID")
-LOCATION = os.environ.get("LOCATION")
+project_id = os.environ.get('PROJECT_ID')
+location = os.environ.get('LOCATION')
 
 # Debugging statements to verify environment variables
-print(f"PROJECT_ID: {PROJECT_ID}")
-print(f"LOCATION: {LOCATION}")
+print(f"project_id: {project_id}")
+print(f"location: {location}")
 
 app = Flask(__name__)
 CORS(app, resources={
@@ -23,13 +23,13 @@ CORS(app, resources={
     }
 })
 
-@app.before_request
-def check_env_variables():
-    if not PROJECT_ID or not LOCATION:
-        return jsonify({
-            "status": "error",
-            "error": "Missing PROJECT_ID or LOCATION environment variable."
-        }), 500
+# @app.before_request
+# def check_env_variables():
+#   if not PROJECT_ID or not LOCATION:
+#       return jsonify({
+#           "status": "error",
+#           "error": "Missing PROJECT_ID or LOCATION environment variable."
+#       }), 500
 
 @app.after_request
 def after_request(response):
