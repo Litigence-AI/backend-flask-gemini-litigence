@@ -7,12 +7,6 @@ from vertexai.preview.generative_models import grounding
 import os
 import json
 
-project_id = os.environ.get('PROJECT_ID')
-location = os.environ.get('LOCATION')
-
-# Debugging statements to verify environment variables
-print(f"project_id: {project_id}")
-print(f"location: {location}")
 
 app = Flask(__name__)
 CORS(app, resources={
@@ -70,41 +64,45 @@ def health_check():
 
 @app.route("/ask", methods=["POST"])
 def ask_legal_question():
-    if not request.is_json:
-        return jsonify({"error": "Content-Type must be application/json"}), 400
-    
-    question = request.json.get("question")
-    if not question:
-        return jsonify({"error": "Question is required"}), 400
 
-    try:
-        vertexai.init(project=PROJECT_ID, location=LOCATION)
-        tools = [
-            Tool.from_google_search_retrieval(
-                google_search_retrieval=grounding.GoogleSearchRetrieval()
-            ),
-        ]
-        model = GenerativeModel(
-            "gemini-1.5-flash-002",
-            tools=tools,
-            system_instruction=[law_assistant_instruction],
-            generation_config=generation_config,
-            safety_settings=safety_settings
-        )
-        chat = model.start_chat()
-        response = chat.send_message([question])
-        cleaned_text = clean_response(response)
-        
-        return jsonify({
-            "status": "success",
-            "response": cleaned_text
-        })
+  project_id = os.environ.get('PROJECT_ID')
+  location = os.environ.get('LOCATION')
 
-    except Exception as e:
-        return jsonify({
-            "status": "error", 
-            "error": str(e)
-        }), 500
+  if not request.is_json:
+      return jsonify({"error": "Content-Type must be application/json"}), 400
+  
+  question = request.json.get("question")
+  if not question:
+      return jsonify({"error": "Question is required"}), 400
+
+  try:
+      vertexai.init(project=project_id, location=location)
+      tools = [
+          Tool.from_google_search_retrieval(
+              google_search_retrieval=grounding.GoogleSearchRetrieval()
+          ),
+      ]
+      model = GenerativeModel(
+          "gemini-1.5-flash-002",
+          tools=tools,
+          system_instruction=[law_assistant_instruction],
+          generation_config=generation_config,
+          safety_settings=safety_settings
+      )
+      chat = model.start_chat()
+      response = chat.send_message([question])
+      cleaned_text = clean_response(response)
+      
+      return jsonify({
+          "status": "success",
+          "response": cleaned_text
+      })
+
+  except Exception as e:
+      return jsonify({
+          "status": "error", 
+          "error": str(e)
+      }), 500
 
 if __name__ == "__main__":
     app.run(
