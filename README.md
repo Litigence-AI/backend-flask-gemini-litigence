@@ -32,15 +32,11 @@ tar -xf google-cloud-cli-linux-x86_64.tar.gz
 ./google-cloud-sdk/install.sh
 ```
 
-(Optional) Add the Google Cloud CLI to your PATH:
-```bash
-# Example approach
-echo "source ~/google-cloud-sdk/path.bash.inc" >> ~/.bashrc
-source ~/.bashrc
-```
+Opt Yes to add sdk path to rc and Open a new terminal shell
+
 Initialize the SDK:
 ```bash
-./google-cloud-sdk/bin/gcloud init
+gcloud init
 ```
 
 Follow the prompts to choose your Google Cloud project and configure default settings.
@@ -51,7 +47,7 @@ Follow the prompts to choose your Google Cloud project and configure default set
 
 Authenticate using Application Default Credentials:
 ```bash
-./google-cloud-sdk/bin/gcloud auth application-default login
+gcloud auth application-default login
 ```
 Follow the sign-in process in your browser, and your credentials will be saved locally.
 
@@ -61,7 +57,7 @@ Follow the sign-in process in your browser, and your credentials will be saved l
 
 You may need to grant specific permissions, for example:
 ```bash
-./google-cloud-sdk/bin/gcloud projects add-iam-policy-binding law-ai-437009 \
+gcloud projects add-iam-policy-binding law-ai-437009 \
 --member=serviceAccount:916007394186-compute@developer.gserviceaccount.com \
 --role=roles/cloudbuild.builds.builder
 ```
@@ -80,9 +76,9 @@ gcloud config set compute/region asia-south1
 
 ## Testing the API Locally
 
-Once the app is running on `http://localhost:8000`, you can test an endpoint with `curl`, for example:
+Once the app is running on `http://localhost:8080`, you can test an endpoint with `curl`, for example:
 ```bash
-curl --location 'http://localhost:8000/ask' \
+curl --location 'http://localhost:8080/ask' \
 --header 'Content-Type: application/json' \
 --data '{"question":"What are the rights I have as a citizen of India?"}'
 ```
