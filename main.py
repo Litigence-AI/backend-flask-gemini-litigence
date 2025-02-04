@@ -95,7 +95,7 @@ def ask_legal_question():
           ),
       ]
       model = GenerativeModel(
-          "gemini-1.5-flash-002",
+          "gemini-1.5-pro-002",
           tools=tools,
           system_instruction=[law_assistant_instruction],
           generation_config=generation_config,
