@@ -6,8 +6,8 @@
   "waitFor": "onCreateCommand",
   "updateContentCommand": "pip install -r requirements.txt",
   "postCreateCommand": "",
-  "postAttachCommand": {
-    "server": "flask --app main.py --debug run"
+"postAttachCommand": {
+    "server": "./start.sh"
   },
   "portsAttributes": {
     "8080": {
