@@ -75,10 +75,10 @@ def ask_legal_question():
             location=location,
         )
 
-        # Set up tools (Google Search)
-        tools = [
-            types.Tool(google_search=types.GoogleSearch())
-        ]
+        # # Set up tools (Google Search)
+        # tools = [
+        #     types.Tool(google_search=types.GoogleSearch())
+        # ]
 
         # Configure safety settings
         safety_settings = [
@@ -107,7 +107,7 @@ def ask_legal_question():
             max_output_tokens=8192,
             response_modalities=["TEXT"],
             safety_settings=safety_settings,
-            tools=tools,
+            # tools=tools,
             system_instruction=[types.Part.from_text(text=law_assistant_instruction)],
         )
 
@@ -195,6 +195,7 @@ def ask_legal_question():
         }), 500
 
 @app.route("/ask_stream", methods=["POST"])
+
 def ask_legal_question_stream():
     """Streaming version of the ask endpoint that returns responses as they are generated"""
     project_id = os.environ.get('PROJECT_ID')
@@ -220,7 +221,7 @@ def ask_legal_question_stream():
         )
 
         # Set up tools and configs as in the non-streaming version
-        tools = [types.Tool(google_search=types.GoogleSearch())]
+        tools = [types.Tool(google_search=types.GoogleSearchRetrieval())]
         safety_settings = [
             types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="BLOCK_ONLY_HIGH"),
             types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_ONLY_HIGH"),
