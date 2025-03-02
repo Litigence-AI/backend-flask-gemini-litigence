@@ -10,7 +10,7 @@
     "server": "flask --app main.py --debug run"
   },
   "portsAttributes": {
-    "5000": {
+    "8080": {
       "label": "Application",
       "onAutoForward": "openPreview"
     }
