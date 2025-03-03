@@ -57,9 +57,9 @@ Follow the sign-in process in your browser, and your credentials will be saved l
 
 You may need to grant specific permissions, for example:
 ```bash
-gcloud projects add-iam-policy-binding law-ai-437009 \
---member=serviceAccount:916007394186-compute@developer.gserviceaccount.com \
---role=roles/cloudbuild.builds.builder
+gcloud projects add-iam-policy-binding PROJECT_ID \
+--member=serviceAccount:SERVICE_ACCOUNT_EMAIL \
+--role=ROLE_NAME
 ```
 
 ---
