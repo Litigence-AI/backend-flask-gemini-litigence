@@ -1,15 +1,15 @@
 from flask import Blueprint, jsonify, request
 from google.genai import types
-import json
 from services import genai_service, media_service
-import os
-import base64
-from flask import current_app
 
 legal_bp = Blueprint('legal', __name__)
 
+# Global chat history to store user and AI exchanges
+chat_history = []
+
 @legal_bp.route("/ask", methods=["POST"])
 def ask_legal_question():
+    global chat_history  # Use the global chat history
     if not request.is_json:
         return jsonify({"error": "Content-Type must be application/json"}), 400
     
@@ -47,8 +47,12 @@ def ask_legal_question():
         if question:
             parts.append(types.Part.from_text(text=question))
         
-        # Create content with user's input
-        contents = [types.Content(role="user", parts=parts)]
+        # Create content for this user input
+        user_content = types.Content(role="user", parts=parts)
+
+        # Build the full conversation history (last 10 exchanges to avoid overflow)
+        contents = chat_history[-10:]  # Include only recent history for context
+        contents.append(user_content)  # Add current user input
 
         # Get response from model
         response = client.models.generate_content(
@@ -58,10 +62,15 @@ def ask_legal_question():
         )
 
         cleaned_text = genai_service.clean_response(response)
+
+        # Update chat history with user input and AI response
+        chat_history.append(user_content)  # Store user message
+        chat_history.append(types.Content(role="model", parts=[types.Part.from_text(text=cleaned_text)]))  # Store AI response
         
         return jsonify({
             "status": "success",
-            "response": cleaned_text
+            "response": cleaned_text,
+            "history_length": len(chat_history) // 2  # Number of exchanges (user + AI)
         })
 
     except Exception as e:
