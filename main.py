@@ -3,9 +3,13 @@ from flask_cors import CORS
 import config
 from routes.health import health_bp
 from routes.legal_assistant import legal_bp
+from services.firebase_services import initialize_firebase
 
 def create_app():
     app = Flask(__name__)
+
+        # Initialize Firebase
+    initialize_firebase()
     
     # Configure CORS
     CORS(app, resources={

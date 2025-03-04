@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request
 from google.genai import types
 from services import genai_service, media_service
+from firebase_admin import firestore
+
+from services.firebase_services import save_chat_to_firestore
 
 legal_bp = Blueprint('legal', __name__)
 
@@ -63,6 +66,19 @@ def ask_legal_question():
 
         cleaned_text = genai_service.clean_response(response)
 
+                # Add this code to save to Firebase
+        # For now, use a fixed chat title and get user_id from request
+        chat_title = "Legal Consultation"
+        user_id = request.json.get("user_id", "anonymous")  # Get user_id from request or use "anonymous"
+        
+        # Save the conversation to Firestore
+        save_chat_to_firestore(
+            user_id=user_id,
+            chat_title=chat_title,
+            user_message=question,  # The original question text
+            ai_response=cleaned_text  # The AI's response
+        )
+
         # Update chat history with user input and AI response
         chat_history.append(user_content)  # Store user message
         chat_history.append(types.Content(role="model", parts=[types.Part.from_text(text=cleaned_text)]))  # Store AI response
@@ -70,11 +86,62 @@ def ask_legal_question():
         return jsonify({
             "status": "success",
             "response": cleaned_text,
-            "history_length": len(chat_history) // 2  # Number of exchanges (user + AI)
+            # You can add this to indicate the chat was saved
+            "chat_saved": True,
+            "chat_title": chat_title
         })
 
     except Exception as e:
         return jsonify({
             "status": "error", 
+            "error": str(e)
+        }), 500
+
+
+@legal_bp.route("/chat_history", methods=["GET"])
+def get_chat_history():
+    """Retrieve chat history for a user"""
+    user_id = request.args.get("user_id")
+    chat_title = request.args.get("chat_title")
+    
+    if not user_id:
+        return jsonify({"status": "error", "error": "user_id is required"}), 400
+    
+    try:
+        db = firestore.client()
+        
+        if chat_title:
+            # Get a specific chat
+            chat_ref = db.collection('user_data').document(user_id) \
+                         .collection('user_chats').document(chat_title)
+            chat_doc = chat_ref.get()
+            
+            if not chat_doc.exists:
+                return jsonify({"status": "error", "error": "Chat not found"}), 404
+                
+            return jsonify({
+                "status": "success",
+                "chat": chat_doc.to_dict()
+            })
+        else:
+            # Get all chats for the user
+            chats_ref = db.collection('user_data').document(user_id) \
+                          .collection('user_chats')
+            chats = chats_ref.get()
+            
+            chat_list = []
+            for chat in chats:
+                chat_data = chat.to_dict()
+                chat_data['id'] = chat.id  # Add the document ID
+                chat_list.append(chat_data)
+                
+            return jsonify({
+                "status": "success",
+                "chats": chat_list
+            })
+            
+    except Exception as e:
+        return jsonify({
+            "status": "error",
             "error": str(e)
         }), 500
