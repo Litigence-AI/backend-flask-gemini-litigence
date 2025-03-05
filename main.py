@@ -3,6 +3,7 @@ from flask_cors import CORS
 import config
 from routes.health import health_bp
 from routes.legal_assistant import legal_bp
+from routes.fetch_data import fetch_bp
 from services.firebase_services import initialize_firebase
 
 def create_app():
@@ -30,6 +31,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(health_bp)
     app.register_blueprint(legal_bp)
+    app.register_blueprint(fetch_bp, url_prefix='')
     
     return app
 
