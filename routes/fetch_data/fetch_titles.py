@@ -4,10 +4,9 @@ import traceback
 from datetime import datetime
 
 # Import the blueprint from wherever you've defined it
-from routes import legal_bp  # Adjust this path as needed
+from . import fetch_bp  # Adjust this path as needed
 
-
-@legal_bp.route("/chat_titles", methods=["GET"])
+@fetch_bp.route("/chat_titles", methods=["GET"])
 def get_chat_titles():
     """Retrieve just the chat titles for a user"""
     user_id = request.args.get("user_id")
