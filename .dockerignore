@@ -1,0 +1,52 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Google Cloud SDK
+google-cloud-sdk/
+google-cloud-cli-*.tar.gz
+
+# Credentials and secrets
+.env
+*.json
+!serviceAccountKey.json
+litigence-ai-firebase-adminsdk-fbsvc-d1986c607b.json
+
+# Version control
+.git/
+.gitignore
+.github/
+
+# Docker related
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation and others
+*.md
+LICENSE
+*.log
+.DS_Store
