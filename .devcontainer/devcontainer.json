@@ -6,14 +6,14 @@
   "waitFor": "onCreateCommand",
   "updateContentCommand": "pip install -r requirements.txt",
   "postCreateCommand": "",
-  "postAttachCommand": {
-    "server": "flask --app main.py --debug run"
+"postAttachCommand": {
+    "server": "./start.sh"
   },
   "portsAttributes": {
-    "5000": {
-      "label": "Application",
-      "onAutoForward": "openPreview"
+    "8080": {
+      "label": "Application"
+      // "onAutoForward": "openPreview"
     }
   },
-  "forwardPorts": [5000]
+  "forwardPorts": [8080]
 }
