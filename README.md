@@ -12,6 +12,15 @@ This application provides a Flask-based API that can be run locally or deployed 
 
 ## Running the Application Locally
 
+# Create a virtual environment
+python -m venv .venv
+
+# Activate it (this will need to be done each time you start a new shell)
+source .venv/bin/activate
+
+# Install requirements
+pip install -r requirements.txt
+
 1. Clone or open the repository.  
 2. Ensure you have installed Python dependencies (if applicable, use `pip install -r requirements.txt`).  
 3. Run the application:
