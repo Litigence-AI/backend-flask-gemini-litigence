@@ -12,24 +12,16 @@ This application provides a Flask-based API that can be run locally or deployed 
 
 ## Running the Application Locally
 
+### Clone or open the repository.  
+
 ### Create a virtual environment
 ```python -m venv .venv```
 
 ### Activate it (this will need to be done each time you start a new shell)
 ```source .venv/bin/activate```
 
-### Install requirements
+### Install dependencies
 ```pip install -r requirements.txt```
-
-1. Clone or open the repository.  
-2. Ensure you have installed Python dependencies (if applicable, use `pip install -r requirements.txt`).  
-3. Run the application:
-```bash
-python main.py
-```
-This starts the application at `http://localhost:8000`.
-
----
 
 ## Installing Google Cloud SDK
 
@@ -80,6 +72,14 @@ Set your preferred default compute region and zone:
 gcloud config set compute/zone asia-south1-a
 gcloud config set compute/region asia-south1
 ```
+
+---
+
+Run the application:
+```bash
+python main.py
+```
+This starts the application at `http://localhost:8000`.
 
 ---
 
