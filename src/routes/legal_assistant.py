@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from google.genai import types
 from src.services import genai_service, media_service
 from firebase_admin import firestore
+from datetime import datetime
 
 from src.services.firebase_services import save_chat_to_firestore
 
