@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
 import config
-from routes.health import health_bp
-from routes.legal_assistant import legal_bp
-from routes.fetch_data import fetch_bp
-from services.firebase_services import initialize_firebase
+from src.routes.health import health_bp
+from src.routes.legal_assistant import legal_bp
+from src.routes.fetch_data import fetch_bp
+from src.services.firebase_services import initialize_firebase
 
 def create_app():
     app = Flask(__name__)
