@@ -12,9 +12,8 @@ def initialize_firebase():
     For local development, we can use a local credentials file.
     
     Priority order:
-    1. FIREBASE_CREDENTIALS environment variable (JSON string for Cloud Run)
-    2. GOOGLE_APPLICATION_CREDENTIALS environment variable (path to credentials file)
-    3. Local file in /secrets directory (for local development)
+    1. FIREBASE_CREDENTIALS environment variable (JSON string set via Secret Manager in Cloud Run)
+    2. Local file in /secrets directory (for local development)
     """
     try:
         # Check if already initialized
@@ -25,26 +24,17 @@ def initialize_firebase():
         # Attempt to get credentials from various sources
         cred = None
         
-        # Option 1: JSON string in environment variable (best for Cloud Run)
+        # Option 1: JSON string in environment variable (from Secret Manager in Cloud Run)
         firebase_creds_json = os.environ.get('FIREBASE_CREDENTIALS')
         if firebase_creds_json:
             try:
                 cred_dict = json.loads(firebase_creds_json)
                 cred = credentials.Certificate(cred_dict)
-                print('Firebase credentials loaded from FIREBASE_CREDENTIALS environment variable')
+                print('Firebase credentials loaded from FIREBASE_CREDENTIALS environment variable (Secret Manager)')
             except Exception as e:
                 print(f"Error parsing Firebase credentials from environment: {e}")
         
-        # Option 2: Google default credentials path (standard GCP approach)
-        if cred is None and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-            try:
-                # This will use the credentials file specified in GOOGLE_APPLICATION_CREDENTIALS
-                cred = credentials.ApplicationDefault()
-                print('Firebase credentials loaded using application default credentials')
-            except Exception as e:
-                print(f"Error loading application default credentials: {e}")
-        
-        # Option 3: Local file in project (for local development)
+        # Option 2: Local file in project (for local development)
         if cred is None:
             # Try standard locations for credentials file
             credential_paths = [
