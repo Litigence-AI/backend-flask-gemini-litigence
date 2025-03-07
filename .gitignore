@@ -4,5 +4,5 @@ google-cloud-sdk/
 google-cloud-cli-linux-x86_64.tar.gz
 .venv/
 .env
-litigence-ai-firebase-adminsdk-fbsvc-d1986c607b.json
+secrets/litigence-ai-firebase-adminsdk-fbsvc-d1986c607b.json
 secrets/application_default_credentials.json

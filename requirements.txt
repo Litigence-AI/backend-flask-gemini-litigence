@@ -16,3 +16,4 @@ grpcio-status==1.68.1
 flask-cors
 google-genai
 firebase-admin
+gunicorn

@@ -1,7 +1,7 @@
 from google import genai
 from google.genai import types
 import config
-from utils.response_utils import clean_response
+from src.utils.response_utils import clean_response
 
 def initialize_client():
     """Initialize and return the Google GenAI client"""

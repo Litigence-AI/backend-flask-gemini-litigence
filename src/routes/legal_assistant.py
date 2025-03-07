@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
 from google.genai import types
-from services import genai_service, media_service
+from src.services import genai_service, media_service
 from firebase_admin import firestore
 
-from services.firebase_services import save_chat_to_firestore
+from src.services.firebase_services import save_chat_to_firestore
 
 legal_bp = Blueprint('legal', __name__)
 
