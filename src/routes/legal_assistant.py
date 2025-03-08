@@ -70,10 +70,10 @@ def ask_legal_question():
                 # Add this code to save to Firebase
         # For now, use a fixed chat title and get user_id from request
         chat_title = "Legal Consultation"
-        user_id = request.json.get("user_id", "anonymous")  # Get user_id from request or use "anonymous"
+        user_id = request.json.get("user_id", "test_user_123")  # Get user_id from request or use default test user
         
         # Save the conversation to Firestore
-        save_chat_to_firestore(
+        save_result = save_chat_to_firestore(
             user_id=user_id,
             chat_title=chat_title,
             user_message=question,  # The original question text
@@ -87,9 +87,10 @@ def ask_legal_question():
         return jsonify({
             "status": "success",
             "response": cleaned_text,
-            # You can add this to indicate the chat was saved
-            "chat_saved": True,
-            "chat_title": chat_title
+            # Indicate if the chat was saved
+            "chat_saved": save_result,
+            "chat_title": chat_title,
+            "user_id": user_id
         })
 
     except Exception as e:
@@ -99,80 +100,3 @@ def ask_legal_question():
         }), 500
 
 
-def save_chat_to_firestore(user_id, chat_title, user_message, ai_response, chat_id=None):
-  """
-  Save a chat message to Firestore with proper document IDs.
-  
-  Args:
-      user_id (str): User identifier
-      chat_title (str): Human-readable title for the chat
-      user_message (str): Message from the user
-      ai_response (str): Response from the AI
-      chat_id (str, optional): Existing chat ID for continuing conversations
-      
-  Returns:
-      dict: Contains chat_id, title and success status
-  """
-  db = firestore.client()
-  current_timestamp = datetime.now()
-  
-  # Create message objects
-  user_message_data = {
-      'role': 'user',
-      'message': user_message,
-      'timestamp': current_timestamp
-  }
-  
-  ai_message_data = {
-      'role': 'ai',
-      'message': ai_response,
-      'timestamp': current_timestamp
-  }
-  
-  # Case 1: Continuing an existing chat
-  if chat_id:
-      chat_ref = db.collection('user_data').document(user_id) \
-                    .collection('user_chats').document(chat_id)
-      
-      chat_doc = chat_ref.get()
-      if chat_doc.exists:
-          # Update existing chat
-          chat_ref.update({
-              'messages': firestore.ArrayUnion([user_message_data, ai_message_data]),
-              'last_updated': current_timestamp
-          })
-          return {
-              'success': True,
-              'chat_id': chat_id,
-              'title': chat_doc.get('title')
-          }
-      else:
-          # Chat ID provided but doesn't exist - create a new one instead
-          chat_id = None
-  
-  # Case 2: Creating a new chat
-  if not chat_id:
-      # Generate a title if none provided
-      if not chat_title:
-          # Use first few words of user message as title
-          words = user_message.split()[:5]
-          chat_title = " ".join(words) + "..." if len(words) >= 5 else user_message
-      
-      # Create a new document with auto-generated ID
-      chat_ref = db.collection('user_data').document(user_id) \
-                    .collection('user_chats').document()
-      
-      # Set the data with title preserved
-      chat_ref.set({
-          'title': chat_title,  # Store the user-friendly title
-          'createdAt': current_timestamp,
-          'last_updated': current_timestamp,
-          'messages': [user_message_data, ai_message_data]
-      })
-      
-      return {
-          'success': True,
-          'chat_id': chat_ref.id,
-          'title': chat_title,
-          'is_new': True
-      }
