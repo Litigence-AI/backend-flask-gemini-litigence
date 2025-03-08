@@ -93,6 +93,8 @@ curl --location 'http://localhost:8080/ask' \
 ```
 You should receive a JSON response containing the answer from your service.
 
+For comprehensive API testing examples including media uploads, Firestore integration, and streaming responses, refer to the [API Testing Guide](docs/api_testing_guide.md).
+
 ---
 
 ## Additional Notes
@@ -100,5 +102,7 @@ You should receive a JSON response containing the answer from your service.
 - Check the generated `.boto` file if you plan to interact with Google Cloud Storage.  
 - Your credentials are stored at `~/.config/gcloud/application_default_credentials.json`.  
 - Ensure you have billing enabled on the selected project if you use any paid Google Cloud services.
+- For Firebase SDK JSON generation and configuration, refer to the [Firebase Setup Guide](docs/firebase_setup.md).
+- For setting up Google Cloud Run CI/CD with your Git repository and configuring environment variables and secrets, see the [Google Cloud Run CI/CD Setup Guide](docs/cloud_run_setup.md).
 
 ---
