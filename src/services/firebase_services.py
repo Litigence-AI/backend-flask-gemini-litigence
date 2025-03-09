@@ -77,8 +77,12 @@ def save_chat_to_firestore(user_id, chat_title, user_message, ai_response):
     """
     try:
         db = firestore.client()
-        current_timestamp = datetime.now()
-        
+        try:
+            current_timestamp = datetime.now()
+            print(f"Current timestamp: {current_timestamp}")
+        except Exception as e:
+            print(f"Error with datetime: {str(e)}")
+
         # Create message objects
         user_message_data = {
             'role': 'user',
