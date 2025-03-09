@@ -1,7 +1,5 @@
-from flask import Blueprint, jsonify, request
+from flask import jsonify, request
 from firebase_admin import firestore
-import traceback
-from datetime import datetime
 
 # Import the blueprint from wherever you've defined it
 from . import fetch_bp  # Adjust this path as needed
@@ -44,6 +42,6 @@ def get_chat_titles():
             
     except Exception as e:
         return jsonify({
-            "status": "error",
+            "status": "error in response util",
             "error": str(e)
         }), 500

@@ -50,7 +50,7 @@ def get_chat_history():
             
     except Exception as e:
         return jsonify({
-            "status": "error",
+            "status": "error in fetch_history",
             "error": str(e)
         }), 500
 

@@ -96,8 +96,7 @@ def ask_legal_question():
     except Exception as e:
 
         return jsonify({
-            "info": "Internal THeo Error",
-            "status": "error", 
+            "status": "error in ask_legal_question", 
             "error": str(e)
         }), 500
 
