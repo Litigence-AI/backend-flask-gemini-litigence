@@ -10,16 +10,6 @@ PROJECT_ID = os.environ.get('PROJECT_ID')
 LOCATION = os.environ.get('LOCATION')
 MODEL_NAME = "gemini-1.5-pro-002"
 
-# API Key fallback if Vertex AI credentials are not available
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
-
-# Log configuration status
-if not PROJECT_ID or not LOCATION:
-    if GOOGLE_API_KEY:
-        print("Using API key-based authentication for Google GenAI")
-    else:
-        print("WARNING: Missing Google AI credentials. Set PROJECT_ID and LOCATION for Vertex AI or GOOGLE_API_KEY for API key authentication.")
-
 # System prompts
 LAW_ASSISTANT_INSTRUCTION = """You are Litigence AI 🤖⚖️ an Indian law legal AI Assistant
 
