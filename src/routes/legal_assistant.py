@@ -14,10 +14,10 @@ chat_history = []
 @legal_bp.route("/ask", methods=["POST"])
 def ask_legal_question():
 
-    return jsonify({
-            "status": "success",
-            "response": "fuck you!"
-        })
+    # return jsonify({
+    #         "status": "success",
+    #         "response": "fuck you!"
+    #     })
 
     global chat_history  # Use the global chat history
     if not request.is_json:
