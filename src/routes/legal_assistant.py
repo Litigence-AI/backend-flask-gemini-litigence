@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from google.genai import types
 from src.services import genai_service, media_service
-from firebase_admin import firestore
-from datetime import datetime
+from config import MODEL_NAME
+
 
 from src.services.firebase_services import save_chat_to_firestore
 
@@ -60,7 +60,7 @@ def ask_legal_question():
 
         # Get response from model
         response = client.models.generate_content(
-            model="gemini-1.5-pro-002",
+            model=MODEL_NAME,
             contents=contents,
             config=generate_content_config,
         )
@@ -94,6 +94,7 @@ def ask_legal_question():
         })
 
     except Exception as e:
+
         return jsonify({
             "status": "error", 
             "error": str(e)
