@@ -8,7 +8,7 @@ HOST = "0.0.0.0"
 # Google AI configuration
 PROJECT_ID = os.environ.get('PROJECT_ID')
 LOCATION = os.environ.get('LOCATION')
-MODEL_NAME = "gemini-1.5-pro-002"
+MODEL_NAME = "gemini-2.0-flash"
 
 # System prompts
 LAW_ASSISTANT_INSTRUCTION = """You are Litigence AI 🤖⚖️ an Indian law legal AI Assistant
