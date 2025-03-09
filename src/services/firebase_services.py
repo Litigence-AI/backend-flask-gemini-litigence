@@ -31,6 +31,7 @@ def initialize_firebase():
                 cred_dict = json.loads(firebase_creds_json)
                 cred = credentials.Certificate(cred_dict)
                 print('Firebase credentials loaded from FIREBASE_CREDENTIALS environment variable (Secret Manager)')
+                print(cred)
             except Exception as e:
                 print(f"Error parsing Firebase credentials from environment: {e}")
         
