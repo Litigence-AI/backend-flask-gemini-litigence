@@ -73,12 +73,12 @@ def ask_legal_question():
         user_id = request.json.get("user_id", "test_user_123")  # Get user_id from request or use default test user
         
         # Save the conversation to Firestore
-        save_result = save_chat_to_firestore(
-            user_id=user_id,
-            chat_title=chat_title,
-            user_message=question,  # The original question text
-            ai_response=cleaned_text  # The AI's response
-        )
+        # save_result = save_chat_to_firestore(
+        #     user_id=user_id,
+        #     chat_title=chat_title,
+        #     user_message=question,  # The original question text
+        #     ai_response=cleaned_text  # The AI's response
+        # )
 
         # Update chat history with user input and AI response
         chat_history.append(user_content)  # Store user message
