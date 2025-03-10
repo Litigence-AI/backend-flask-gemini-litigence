@@ -27,7 +27,7 @@ def ask_legal_question():
         
         # Check if GOOGLE_APPLICATION_CREDENTIALS environment variable is set
         if not DEBUG:
-            # os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+            os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
             # Let the Google client library handle authentication
             client = genai.Client(
                 vertexai=True,
@@ -66,10 +66,6 @@ def ask_legal_question():
                     return jsonify({"error": "Invalid credentials format in application_default_credentials.json"}), 500
             except Exception as e:
                 return jsonify({"error": f"Error loading credentials: {str(e)}"}), 500
-        else:
-            return jsonify({
-                "error": "Authentication not configured. Set GOOGLE_APPLICATION_CREDENTIALS environment variable or run in DEBUG mode."
-            }), 500
 
         # Create content for the model
         contents = [
