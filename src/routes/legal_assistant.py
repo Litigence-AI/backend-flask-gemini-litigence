@@ -27,7 +27,7 @@ def ask_legal_question():
         
         # Check if GOOGLE_APPLICATION_CREDENTIALS environment variable is set
         if not DEBUG:
-            os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+            os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
             # Let the Google client library handle authentication
             client = genai.Client(
                 vertexai=True,
