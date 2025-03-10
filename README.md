@@ -106,3 +106,28 @@ For comprehensive API testing examples including media uploads, Firestore integr
 - For setting up Google Cloud Run CI/CD with your Git repository and configuring environment variables and secrets, see the [Google Cloud Run CI/CD Setup Guide](docs/cloud_run_setup.md).
 
 ---
+
+### Build the Docker Image
+```bash
+sudo docker build -t litigence-ai-backend .
+```
+
+### Run the Docker Container
+```bash
+docker run -p 8080:8080 \
+  -e FLASK_ENV=placeholder \
+  -e PORT=placeholder \
+  -e PROJECT_ID=placeholder \
+  -e LOCATION=placeholder \
+  litigence-ai-backend
+```
+
+### Check Running Containers
+```bash
+sudo docker ps
+```
+
+### Stop a Running Container
+```bash
+sudo docker stop <container_id>
+```
