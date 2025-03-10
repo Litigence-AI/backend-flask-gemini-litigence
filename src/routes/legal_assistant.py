@@ -26,14 +26,15 @@ def ask_legal_question():
         APP_DEFAULT_CREDENTIALS = None
         
         # Check if GOOGLE_APPLICATION_CREDENTIALS environment variable is set
-        if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+        if not DEBUG:
+            # os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
             # Let the Google client library handle authentication
             client = genai.Client(
                 vertexai=True,
                 project=PROJECT_ID,
                 location=LOCATION,
             )
-        elif DEBUG:
+        else:
             # For local development, load credentials from file
             try:
                 credentials_path = './secrets/application_default_credentials.json'
