@@ -97,9 +97,21 @@ def save_chat_to_firestore(user_id, chat_title, user_message, ai_response):
             'timestamp': current_timestamp
         }
         
+        # Check if user exists
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        if not user_doc.exists:
+            print(f"User document {user_id} doesn't exist, will be created implicitly")
+        
         # Reference to chat document
-        chat_ref = db.collection('users').document(user_id) \
-                     .collection('chats').document(chat_title)
+        chat_ref = user_ref.collection('chats').document(chat_title)
+        
+        # Check if chat document exists
+        chat_doc = chat_ref.get()
+        if chat_doc.exists:
+            print(f"Updating existing chat document: {chat_title}")
+        else:
+            print(f"Creating new chat document: {chat_title}")
         
         # Update in transaction
         transaction = db.transaction()
@@ -122,6 +134,7 @@ def save_chat_to_firestore(user_id, chat_title, user_message, ai_response):
                 })
         
         update_in_transaction(transaction, chat_ref)
+        print(f"Successfully saved chat for user {user_id}")
         return True
     except Exception as e:
         print(f"Error saving chat to Firestore: {e}")
