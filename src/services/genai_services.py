@@ -79,3 +79,54 @@ def generate_legal_response(question):
     )
     
     return response.text
+
+def generate_legal_response_stream(question):
+    """
+    Generate a streamed response to a legal question using Gemini.
+    
+    Args:
+        question (str): The legal question text
+        
+    Yields:
+        str: Chunks of the generated response as they become available
+    """
+    client = initialize_genai_client()
+    
+    # Create content for the model
+    contents = [
+        types.Content(
+            role="user",
+            parts=[
+                types.Part.from_text(text=question)
+            ]
+        )
+    ]
+    
+    # Create generation config
+    generate_content_config = types.GenerateContentConfig(
+        temperature=1,
+        top_p=0.95,
+        max_output_tokens=8192,
+        response_modalities=["TEXT"],
+        system_instruction=[types.Part.from_text(text=LAW_ASSISTANT_INSTRUCTION)],
+    )
+
+    try:
+        # Generate response as a stream
+        for chunk in client.models.generate_content_stream(
+            model=MODEL_NAME,
+            contents=contents,
+            config=generate_content_config,
+        ):
+            # Skip empty chunks
+            if not chunk.candidates or not chunk.candidates[0].content.parts:
+                continue
+                
+            # Yield each chunk of text as it arrives
+            if hasattr(chunk, 'text'):
+                yield chunk.text
+            elif hasattr(chunk.candidates[0].content.parts[0], 'text'):
+                yield chunk.candidates[0].content.parts[0].text
+    except Exception as e:
+        # Yield the error as part of the stream
+        yield f"Error generating response: {str(e)}"
