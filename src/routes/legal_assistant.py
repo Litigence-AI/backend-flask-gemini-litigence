@@ -14,6 +14,7 @@ def ask_legal_question():
             
         question = data.get('question')
         user_id = data.get('user_id', 'anonymous')
+        chat_title = "Static Chat Title 1"
         
         try:
             # Use the service to generate a response
@@ -24,7 +25,7 @@ def ask_legal_question():
         # Save to Firebase if user_id is provided
         if user_id != 'anonymous':
             try:
-                save_chat_to_firestore(user_id, question, response_text)
+                save_chat_to_firestore(user_id,chat_title, question, response_text)
             except Exception as e:
                 print(f"Warning: Failed to save chat to Firestore: {str(e)}")
 
