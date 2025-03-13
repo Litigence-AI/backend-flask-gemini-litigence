@@ -98,7 +98,7 @@ def save_chat_to_firestore(user_id, chat_title, user_message, ai_response):
         }
         
         # Reference to chat document
-        chat_ref = db.collection('user_data').document(user_id) \
+        chat_ref = db.collection('users').document(user_id) \
                      .collection('user_chats').document(chat_title)
         
         # Update in transaction

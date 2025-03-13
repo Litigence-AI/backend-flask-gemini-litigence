@@ -20,7 +20,7 @@ def get_chat_history():
         
         if chat_title:
             # Get a specific chat
-            chat_ref = db.collection('user_data').document(user_id) \
+            chat_ref = db.collection('users').document(user_id) \
                          .collection('user_chats').document(chat_title)
             chat_doc = chat_ref.get()
             
@@ -33,7 +33,7 @@ def get_chat_history():
             })
         else:
             # Get all chats for the user
-            chats_ref = db.collection('user_data').document(user_id) \
+            chats_ref = db.collection('users').document(user_id) \
                           .collection('user_chats')
             chats = chats_ref.get()
             
