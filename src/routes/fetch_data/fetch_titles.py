@@ -17,7 +17,7 @@ def get_chat_titles():
         
         # Query all chats for the user but only get minimal data
         chats_ref = db.collection('users').document(user_id) \
-                      .collection('user_chats')
+                      .collection('chats')
         
         # Get only the title and last_updated fields for efficiency
         chats = chats_ref.get()

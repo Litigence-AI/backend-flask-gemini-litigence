@@ -142,7 +142,7 @@ curl -X POST http://localhost:8080/ask \
   3. Click on "Firestore Database" in the left menu
   4. Look for a collection called `users`
   5. Inside it, find a document with ID `test_user_123`
-  6. Inside that, find a sub-collection called `user_chats`
+  6. Inside that, find a sub-collection called `chats`
   7. You should see a document with the title "Legal Consultation"
 
 ## Chat History Testing
