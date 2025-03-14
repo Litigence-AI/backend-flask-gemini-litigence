@@ -49,38 +49,6 @@ def initialize_genai_client():
             raise Exception(f"Error loading credentials: {str(e)}")
 
 def generate_legal_response(question):
-    """Generate a response to a legal question using Gemini."""
-    client = initialize_genai_client()
-    
-    # Create content for the model
-    contents = [
-        types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=question)
-            ]
-        )
-    ]
-    
-    # Create generation config
-    generate_content_config = types.GenerateContentConfig(
-        temperature=1,
-        top_p=0.95,
-        max_output_tokens=8192,
-        response_modalities=["TEXT"],
-        system_instruction=[types.Part.from_text(text=LAW_ASSISTANT_INSTRUCTION)],
-    )
-
-    # Generate response
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=contents,
-        config=generate_content_config,
-    )
-    
-    return response.text
-
-def generate_legal_response_stream(question):
     """
     Generate a streamed response to a legal question using Gemini.
     
@@ -130,3 +98,37 @@ def generate_legal_response_stream(question):
     except Exception as e:
         # Yield the error as part of the stream
         yield f"Error generating response: {str(e)}"
+
+# Non-streaming version (commented out as streaming is now the standard)
+"""
+def generate_legal_response_non_stream(question):
+    client = initialize_genai_client()
+    
+    # Create content for the model
+    contents = [
+        types.Content(
+            role="user",
+            parts=[
+                types.Part.from_text(text=question)
+            ]
+        )
+    ]
+    
+    # Create generation config
+    generate_content_config = types.GenerateContentConfig(
+        temperature=1,
+        top_p=0.95,
+        max_output_tokens=8192,
+        response_modalities=["TEXT"],
+        system_instruction=[types.Part.from_text(text=LAW_ASSISTANT_INSTRUCTION)],
+    )
+
+    # Generate response
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=contents,
+        config=generate_content_config,
+    )
+    
+    return response.text
+"""
