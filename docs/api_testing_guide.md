@@ -187,3 +187,41 @@ The second response should acknowledge and reference the first question about wr
 - Large files may require adjusting timeout settings in curl or your server
 - The streaming endpoint uses Server-Sent Events (SSE), which appear as incremental chunks in your terminal
 - If testing against a production environment, ensure your firewall/security settings allow these requests
+
+## Multimodal File Request Test
+
+```bash
+
+curl -X POST http://localhost:8080/ask_multimodal \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Can you analyze this document and tell me what it means?",
+    "user_id": "test_user",
+    "chat_title": "Document Analysis",
+    "files": [
+      {
+        "file_data": "BASE64_ENCODED_FILE_DATA_HERE",
+        "mime_type": "application/pdf",
+        "filename": "contract.pdf"
+      }
+    ]
+  }'
+```
+
+```bash
+
+curl -X POST http://localhost:8080/ask_multimodal \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Can you analyze this document and tell me what it means?",
+    "user_id": "test_user",
+    "chat_title": "Document Analysis",
+    "files": [
+      {
+        "file_data": "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==",
+        "mime_type": "application/pdf",
+        "filename": "contract.pdf"
+      }
+    ]
+  }'
+```
