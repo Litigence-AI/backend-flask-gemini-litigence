@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, Response, stream_with_context
-from src.services.genai_services import generate_legal_response
+from src.services.genai_services import generate_legal_response, multimodal_generate_legal_response
 from src.services.firebase_services import save_chat_to_firestore
 
 legal_bp = Blueprint('legal', __name__)
@@ -24,6 +24,54 @@ def ask_legal_question():
             try:
                 # Use the streaming service to generate a response
                 for chunk in generate_legal_response(question):
+                    complete_response += chunk
+                    yield chunk
+                    
+                # Save to Firebase after stream is complete
+                if user_id != 'anonymous':
+                    try:
+                        save_chat_to_firestore(user_id, chat_title, question, complete_response)
+                    except Exception as e:
+                        print(f"Warning: Failed to save chat to Firestore: {str(e)}")
+                        
+            except Exception as e:
+                error_msg = f"Error generating response: {str(e)}"
+                yield error_msg
+        
+        # Return a streaming response
+        return Response(stream_with_context(generate()), content_type='text/plain')
+
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+@legal_bp.route("/ask_multimodal", methods=["POST"])
+def ask_legal_question_multimodal():
+    try:
+        # Check if the request contains JSON data
+        if not request.is_json:
+            return jsonify({'error': 'Request must be JSON'}), 400
+            
+        data = request.get_json()
+        
+        # Validate required fields
+        if not data or 'question' not in data:
+            return jsonify({'error': 'Missing required field: question'}), 400
+            
+        question = data.get('question')
+        user_id = data.get('user_id', 'anonymous')
+        chat_title = data.get('chat_title', "Multimodal Chat")
+        files = data.get('files', [])
+        
+        # Define the streaming response generator function
+        def generate():
+            # Store the complete response for saving to Firestore
+            complete_response = ""
+            
+            try:
+                # Use the streaming service to generate a response
+                for chunk in multimodal_generate_legal_response(question, files):
                     complete_response += chunk
                     yield chunk
                     
