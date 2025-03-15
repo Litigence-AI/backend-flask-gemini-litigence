@@ -5,6 +5,7 @@ import json
 from google.oauth2.credentials import Credentials as UserCredentials
 from google.auth.transport.requests import Request
 from config import MODEL_NAME, PROJECT_ID, LOCATION, DEBUG, LAW_ASSISTANT_INSTRUCTION, SAFETY_SETTINGS
+import base64
 
 def initialize_genai_client():
     """Initialize and return a Google Generative AI client."""
@@ -67,6 +68,82 @@ def generate_legal_response(question):
             parts=[
                 types.Part.from_text(text=question)
             ]
+        )
+    ]
+    
+    # Create generation config
+    generate_content_config = types.GenerateContentConfig(
+        temperature=1,
+        top_p=0.95,
+        max_output_tokens=8192,
+        response_modalities=["TEXT"],
+        system_instruction=[types.Part.from_text(text=LAW_ASSISTANT_INSTRUCTION)],
+    )
+
+    try:
+        # Generate response as a stream
+        for chunk in client.models.generate_content_stream(
+            model=MODEL_NAME,
+            contents=contents,
+            config=generate_content_config,
+        ):
+            # Skip empty chunks
+            if not chunk.candidates or not chunk.candidates[0].content.parts:
+                continue
+                
+            # Yield each chunk of text as it arrives
+            if hasattr(chunk, 'text'):
+                yield chunk.text
+            elif hasattr(chunk.candidates[0].content.parts[0], 'text'):
+                yield chunk.candidates[0].content.parts[0].text
+    except Exception as e:
+        # Yield the error as part of the stream
+        yield f"Error generating response: {str(e)}"
+
+def multimodal_generate_legal_response(question, files=None):
+    """
+    Generate a streamed response to a legal question with optional file attachments using Gemini.
+    
+    Args:
+        question (str): The legal question text
+        files (list, optional): List of dictionaries containing file information
+                               [{'file_data': base64_string, 'mime_type': str, 'filename': str}]
+        
+    Yields:
+        str: Chunks of the generated response as they become available
+    """
+    client = initialize_genai_client()
+    
+    # Prepare parts for the content
+    parts = []
+    
+    # Add files if provided
+    if files and isinstance(files, list):
+        for file_info in files:
+            try:
+                # Decode base64 data
+                file_data = base64.b64decode(file_info.get('file_data', ''))
+                mime_type = file_info.get('mime_type', '')
+                
+                # Add file part
+                parts.append(
+                    types.Part.from_bytes(
+                        data=file_data,
+                        mime_type=mime_type
+                    )
+                )
+            except Exception as e:
+                yield f"Error processing file {file_info.get('filename', 'unknown')}: {str(e)}"
+                return
+    
+    # Add question text
+    parts.append(types.Part.from_text(text=question))
+    
+    # Create content for the model
+    contents = [
+        types.Content(
+            role="user",
+            parts=parts
         )
     ]
     
